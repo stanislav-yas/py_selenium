@@ -14,9 +14,9 @@ class PodcastSite:
         a = driver.find_elements(by=By.CSS_SELECTOR, value='article .entry-title > a')
         if len(a) > 0:
             href = a[0].get_attribute('href')
-            return Episode(self.parser, href)
-        else:
-            return None
+            if href != None:
+                return Episode(self.parser, num, href)
+        return None
         
 def _normalize(num: int) -> str:
     num_str = str(num)
