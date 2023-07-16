@@ -14,9 +14,10 @@ class GetEpisodesParser(Parser):
         site = PodcastSite(self)
         episode = site.search_episode(225)
         if episode != None:
-            print(episode.mp3_el)
-            print(episode.pdf_el)
-        pass
+            # print(episode.mp3_el)
+            # print(episode.pdf_el)
+            # episode.download_pdf()
+            pass
 
 if __name__ == '__main__':
     from selenium import webdriver
