@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from .episode import Episode
+from .episode import Episode, episode_num_to_str
 from util.parser import Parser
 
 class PodcastSite:
@@ -7,7 +7,7 @@ class PodcastSite:
         self.parser = parser
 
     def search_episode(self, num: int)-> Episode | None:
-        num_str = _normalize(num)
+        num_str = episode_num_to_str(num)
         s = f'https://speakenglishpodcast.com/?s=%23{num_str}'
         driver = self.parser.driver
         driver.get(s)
@@ -17,11 +17,3 @@ class PodcastSite:
             if href != None:
                 return Episode(self.parser, num, href)
         return None
-        
-def _normalize(num: int) -> str:
-    num_str = str(num)
-    if num < 10:
-        num_str = '00' + num_str
-    elif num < 100:
-        num_str = '0' + num_str
-    return num_str
