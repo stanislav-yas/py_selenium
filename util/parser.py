@@ -23,9 +23,9 @@ class Parser:
     
     def start(self) -> None:
         try:  
-          logging.info('parser started')
+          logging.info('Parser started')
           self.run()
-          logging.info('parser finished')
+          logging.info('Parser finished')
         except Exception as err:
           logging.error(f'Error occured in parser.run(): {err}')
         try:

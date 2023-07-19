@@ -20,10 +20,11 @@ import logging
 
 print('Script started')
 options = webdriver.ChromeOptions()
-prefs = {
-    # "download.default_directory": "./output"
-    }
-options.add_experimental_option("prefs",prefs)
+options.add_argument('--headless')
+# prefs = {
+#     # "download.default_directory": "./output"
+#     }
+# options.add_experimental_option("prefs",prefs)
 log_file = os.path.join('speakenglishpodcast_com', 'podcast_parser.log')
-PodcastParser(driver=webdriver.Chrome(options=options), log_file=log_file, output_dir='output', episode_first=200, episode_last=201).start()
+PodcastParser(driver=webdriver.Chrome(options=options), log_file=log_file, output_dir='output1', episode_first=200, episode_last=201).start()
 print('Script finished')

@@ -11,7 +11,7 @@ class PodcastSite:
     def search_episode(self, num: int)-> Episode | None:
         try:
             num_str = episode_num_to_str(num)
-            s = f'https://speakenglishpodcast.co/?s=%23{num_str}'
+            s = f'https://speakenglishpodcast.com/?s=%23{num_str}'
             driver = self.parser.driver
             driver.get(s)
             a = driver.find_elements(by=By.CSS_SELECTOR, value='article .entry-title > a')
