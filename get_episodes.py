@@ -26,5 +26,14 @@ options.add_argument('--headless')
 #     }
 # options.add_experimental_option("prefs",prefs)
 log_file = os.path.join('speakenglishpodcast_com', 'podcast_parser.log')
-PodcastParser(driver=webdriver.Chrome(options=options), log_file=log_file, output_dir='output1', episode_first=200, episode_last=201).start()
+parser = PodcastParser(driver=webdriver.Chrome(options=options), 
+              log_file=log_file, 
+              output_dir='output', 
+              common_dir=False,
+              exit_if_not_found=False, 
+              clear_dir=True, 
+              episode_first=198, 
+              episode_last=200,
+              )
+parser.start()
 print('Script finished')
