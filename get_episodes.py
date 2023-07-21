@@ -29,11 +29,11 @@ log_file = os.path.join('speakenglishpodcast_com', 'podcast_parser.log')
 parser = PodcastParser(driver=webdriver.Chrome(options=options), 
               log_file=log_file, 
               output_dir='output', 
-              common_dir=False,
+              common_dir=True,
               exit_if_not_found=False, 
               clear_dir=True, 
-              episode_first=198, 
-              episode_last=200,
+              episode_first=200, 
+              episode_last=202,
               )
 parser.start()
 print('Script finished')

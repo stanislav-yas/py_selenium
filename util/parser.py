@@ -1,5 +1,6 @@
 import logging
 from selenium import webdriver
+import time
 
 class Parser:
 
@@ -28,10 +29,12 @@ class Parser:
           logging.info('Parser finished')
         except Exception as err:
           logging.error(f'Error occured in parser.run(): {err}')
+          self.driver.get_screenshot_as_file("shot_error.png")
         try:
           self.finalize()
         except Exception as err:
           logging.error(f'Error occured in parser.finalize(): {err}')
+          self.driver.get_screenshot_as_file("shot_error.png")
 
     def finalize(self) -> None:
         if self.driver != None:
