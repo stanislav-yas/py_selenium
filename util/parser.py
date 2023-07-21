@@ -4,7 +4,7 @@ import time
 
 class Parser:
 
-    def __init__(self, driver, log_file = 'parser.log') -> None:
+    def __init__(self, driver, log_file = 'parser.log', screenshot_on_error = True) -> None:
         logging.basicConfig(
           filename=log_file,
           filemode='w',
@@ -14,6 +14,7 @@ class Parser:
           level=logging.INFO, 
           )
         self._log_file = log_file
+        self._screenshot_on_error = screenshot_on_error
         if driver == None:
             driver = webdriver.Chrome()
         self.driver = driver
@@ -29,12 +30,14 @@ class Parser:
           logging.info('Parser finished')
         except Exception as err:
           logging.error(f'Error occured in parser.run(): {err}')
-          self.driver.get_screenshot_as_file("shot_error.png")
+          if self._screenshot_on_error:
+            self.driver.get_screenshot_as_file("screenshot_error.png")
         try:
           self.finalize()
         except Exception as err:
           logging.error(f'Error occured in parser.finalize(): {err}')
-          self.driver.get_screenshot_as_file("shot_error.png")
+          if self._screenshot_on_error:
+            self.driver.get_screenshot_as_file("screenshot_error.png")
 
     def finalize(self) -> None:
         if self.driver != None:
