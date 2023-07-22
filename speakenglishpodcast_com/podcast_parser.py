@@ -1,6 +1,7 @@
 import os
 import shutil
 import logging
+import time
 from util.parser import Parser
 from .podcast_site import PodcastSite
 
@@ -43,6 +44,7 @@ class PodcastParser(Parser):
                     logging.warning(f"{st} - exiting...")
                     break
                 logging.warning(st)
+                time.sleep(3) #timeout 3s after previous not successful search
             else:
                 episode.download_mp3(self._mp3_output_dir)
                 episode.download_pdf(self._pdf_output_dir)
