@@ -3,7 +3,6 @@ import os
 from speakenglishpodcast_com.podcast_parser import PodcastParser
 import logging
 
-print('Script started')
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 # prefs = {
@@ -18,8 +17,7 @@ parser = PodcastParser(driver=webdriver.Chrome(options=options),
               common_dir=True,
               exit_if_not_found=False, 
               clear_dir=True, 
-              episode_first=199, 
+              episode_first=200, 
               episode_last=201,
               )
 parser.start()
-print('Script finished')

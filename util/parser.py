@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import logging
 from selenium import webdriver
@@ -41,10 +42,12 @@ class Parser:
         raise NotImplementedError("You should implement the main parsing flow in method 'run()'")
     
     def start(self) -> None:
-        try:  
-          logging.info('Parser started')
+        try:
+          self.started = datetime.now()
+          logging.info('Parser started')        
           self.run()
-          logging.info('Parser finished')
+          self.finished = datetime.now()
+          logging.info(f'Parser finished. Elapsed time = {self.finished - self.started}')            
         except Exception as err:
           logging.error(f'Error occured in parser.run(): {err}')
           if self._screenshot_on_error:

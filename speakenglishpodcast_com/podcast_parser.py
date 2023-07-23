@@ -8,7 +8,7 @@ from .podcast_site import PodcastSite
 class PodcastParser(Parser):
 
     def __init__(self, driver, output_dir = os.path.curdir, log_file = 'podcast_parser.log', log_level = logging.INFO, common_dir = True, clear_dir = True, exit_if_not_found = True, episode_first = 1, episode_last = None) -> None:
-        super().__init__(driver, output_dir, log_file)
+        super().__init__(driver, output_dir, log_file, log_level)
         if common_dir : # if common folder for saving files
             self._mp3_output_dir = self._output_dir
             self._pdf_output_dir = self._output_dir
