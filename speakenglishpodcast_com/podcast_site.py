@@ -1,3 +1,4 @@
+import os
 import logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -25,7 +26,7 @@ class PodcastSite:
                 if href != None:
                     return Episode(self.parser, num, href)
             else:
-                driver.get_screenshot_as_file(f"shot_not_found_#{num_str}.png")
+                driver.get_screenshot_as_file(os.path.join(self.parser._output_dir,f"shot_not_found_#{num_str}.png"))
             return None
         except WebDriverException as err:
             logging.error(f'Error occured in search_episode(): {err.msg}')

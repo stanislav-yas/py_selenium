@@ -7,16 +7,16 @@ from .podcast_site import PodcastSite
 
 class PodcastParser(Parser):
 
-    def __init__(self, driver, log_file = 'podcast_parser.log', output_dir = os.path.curdir, common_dir = True, clear_dir = True, exit_if_not_found = True, episode_first = 1, episode_last = None) -> None:
-        super().__init__(driver, log_file)
+    def __init__(self, driver, output_dir = os.path.curdir, log_file = 'podcast_parser.log', log_level = logging.INFO, common_dir = True, clear_dir = True, exit_if_not_found = True, episode_first = 1, episode_last = None) -> None:
+        super().__init__(driver, output_dir, log_file)
         if common_dir : # if common folder for saving files
-            self._mp3_output_dir = output_dir
-            self._pdf_output_dir = output_dir
-            if os.path.exists(output_dir) and clear_dir:
-                shutil.rmtree(output_dir)     
+            self._mp3_output_dir = self._output_dir
+            self._pdf_output_dir = self._output_dir
+            if os.path.exists(self._output_dir) and clear_dir:
+                shutil.rmtree(self._output_dir)     
         else:
-            self._mp3_output_dir = os.path.join(output_dir, 'mp3')
-            self._pdf_output_dir = os.path.join(output_dir, 'pdf')
+            self._mp3_output_dir = os.path.join(self._output_dir, 'mp3')
+            self._pdf_output_dir = os.path.join(self._output_dir, 'pdf')
             if os.path.exists(self._mp3_output_dir) and clear_dir:
                 shutil.rmtree(self._mp3_output_dir) #deleting folder if 'clear_dir' set
             if os.path.exists(self._pdf_output_dir) and clear_dir:
@@ -31,6 +31,7 @@ class PodcastParser(Parser):
         self._episode_last = episode_last
         self._exit_if_not_found = exit_if_not_found
         self.parsed_episodes_count = 0
+        logging.debug('PodcastParser initialized')
     
     def run(self) -> None:
         # driver.set_window_rect(x=1920, y=0, width=1900, height=1000)
