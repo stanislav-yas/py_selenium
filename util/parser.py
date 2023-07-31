@@ -1,21 +1,20 @@
 from datetime import datetime
 import os
 import logging
+from typing import Type
 from selenium import webdriver
-import time
 
 class Parser:
 
     def __init__( self, 
-                  driver = None,
-                  driver_type = webdriver.Chrome,
+                  driver: webdriver.Chrome | webdriver.Firefox | None = None,
+                  driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                   browser_headless = True,
                   output_dir = os.path.curdir, 
                   log_file = 'parser.log', 
                   log_level = logging.DEBUG, 
                   screenshot_on_error = True
                 ) -> None:
-        self.driver = driver
         self._driver_type = driver_type
         self._browser_headless = browser_headless
         self._log_file = log_file
@@ -37,21 +36,23 @@ class Parser:
            handlers=[fh, ch]
         )
         if driver == None:
-           self._init_driver()
-
-    def _init_driver(self):
-        if issubclass(self._driver_type, webdriver.Chrome):
-           options = webdriver.ChromeOptions()
-           if self._browser_headless:
-              options.add_argument('--headless')
-              self.driver=webdriver.Chrome(options=options)
-        elif issubclass(self._driver_type, webdriver.Firefox):
-           options = webdriver.FirefoxOptions()
-           if self._browser_headless:
-              options.add_argument('-headless')
-              self.driver=webdriver.Firefox(options=options)
+           self.init_driver()
         else:
-           raise Exception(f'Unsupported driver type: {self._driver_type}')        
+           self.driver = driver
+
+    def init_driver(self):
+        if issubclass(self._driver_type, webdriver.Chrome):
+            options = webdriver.ChromeOptions()
+            if self._browser_headless == True:
+                options.add_argument('--headless')
+            self.driver=webdriver.Chrome(options=options)
+        elif issubclass(self._driver_type, webdriver.Firefox):
+            options = webdriver.FirefoxOptions()
+            if self._browser_headless:
+                options.add_argument('-headless')
+            self.driver=webdriver.Firefox(options=options)
+        else:
+            raise Exception(f'Unsupported driver type: {self._driver_type}') 
     
     def run(self) -> None:
         '''The main parsing flow - should be implemented in derived class - '''

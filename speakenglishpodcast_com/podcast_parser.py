@@ -2,6 +2,7 @@ import os
 import shutil
 import logging
 import time
+from typing import Type
 from selenium import webdriver
 from util.parser import Parser
 from .podcast_site import PodcastSite
@@ -9,8 +10,8 @@ from .podcast_site import PodcastSite
 class PodcastParser(Parser):
 
     def __init__( self,
-                 driver = None,
-                 driver_type = webdriver.Chrome,
+                 driver: webdriver.Chrome | webdriver.Firefox | None = None,
+                 driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                  browser_headless = True,
                  output_dir = os.path.curdir,
                  log_file = 'podcast_parser.log',
