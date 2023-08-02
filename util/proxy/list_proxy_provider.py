@@ -1,22 +1,24 @@
 from proxy_provider import Proxy, ProxyProvider
 import random
 import requests
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth, HTTPProxyAuth
 class ListProxyProvider(ProxyProvider):
-    type = Proxy.LIST_PROXY_TYPE
-    _pool = []
-    '''Pool of proxies. Proxy is an array of [ip, port]'''
-    _index = -1
-    '''Index of current proxy. -1 if not set yet '''
 
     def __init__(self, proxy_list_str: str = '') -> None:
         super().__init__()
+        self.type = Proxy.LIST_PROXY_TYPE
+        self._pool = []
+        '''Pool of proxies. Proxy is an array of [ip, port]'''
+        self._index = -1
+        '''Index of current proxy. -1 if not set yet '''        
         proxy_list = proxy_list_str.splitlines()
         for proxy in proxy_list:
             try:
-                ip, port = proxy.split(':', 2)
+                cnt = proxy.count(':')
+                if cnt == 1 or cnt == 3:
+                    self._pool.append(proxy.strip().split(':'))            
             except:
-                continue
-            self._pool.append([ip, port])
+                 continue          
         if len(self._pool) == 0:
             raise Exception('Empty proxy pool')    
 
@@ -49,13 +51,20 @@ class ListProxyProvider(ProxyProvider):
         
     def check_proxy(self) -> bool:
         proxy = self.current_proxy()
+        if len(proxy) >= 4:
+            proxy_url = f'{proxy[2]}:{proxy[3]}@{proxy[0]}:{proxy[1]}'
+        elif len(proxy) >= 2:
+            proxy_url = f'{proxy[0]}:{proxy[1]}'
+        else: return False
         proxies = {
-            'http': f'http://{proxy[0]}:{proxy[1]}',
-            'https': f'https://{proxy[0]}:{proxy[1]}',
+            'http': f'http://{proxy_url}',
+            'https': f'https://{proxy_url}',
         }
         try:
-            print(f'Trying proxy: {proxy[0]}:{proxy[1]}...')
-            response = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=10)
+            print(f'Trying proxy: {proxy}...')
+            # response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=10)
+            auth = HTTPBasicAuth('staniaskz', 'WiRhdJv7ty')
+            response = requests.get('https://httpbin.org/ip', proxies=proxies, auth=auth, verify=False, timeout=10)
             if response.status_code == requests.codes.ok:
                 origin = response.json()['origin']
                 print(f'Result = {response.status_code}, Response elapsed {response.elapsed.seconds} seconds, origin={origin}')
@@ -67,15 +76,25 @@ class ListProxyProvider(ProxyProvider):
         return False
 
 sample_proxy_list_str = '''
-82.145.46.190:3128
-132.145.57.78:80
-89.116.229.56:80
-141.170.28.103:8080
-46.17.63.166:18888
+#gjgjfgsjfh
+94.137.90.126:59100:staniaskz:WiRhdJv7ty
+109.172.113.130:59100:staniaskz:WiRhdJv7ty
+93.188.207.49:59100:staniaskz:WiRhdJv7ty	
+212.8.229.77:59100:staniaskz:WiRhdJv7ty	
+77.83.118.44:59100:staniaskz:WiRhdJv7ty	
+'''
+sample_proxy_list_str2 = '''
+#shdgfsjhgjfgdjh
+94.137.90.126:59100
+109.172.113.130:59100
+93.188.207.49:59100	
+212.8.229.77:59100
+77.83.118.44:59100
 '''
 
 if __name__ == '__main__' :
-    pp1 = ListProxyProvider(proxy_list_str=sample_proxy_list_str)
+    pp1 = ListProxyProvider(proxy_list_str=sample_proxy_list_str2)
+    # pp2 = ListProxyProvider(proxy_list_str=sample_proxy_list_str2)
     for proxy in pp1.all_proxies:
         pp1.next_proxy()
         print(pp1.check_proxy())

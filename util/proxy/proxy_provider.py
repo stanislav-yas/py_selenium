@@ -4,4 +4,5 @@ class Proxy:
     API_PROXY_TYPE = 2
     
 class ProxyProvider:
-    type = Proxy.UNKNOWN_TYPE
+    def __init__(self) -> None:
+        type = Proxy.UNKNOWN_TYPE
