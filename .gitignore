@@ -2,4 +2,4 @@
 *.log
 *.png
 /output/**
-proxies.txt
+proxy_list.txt
