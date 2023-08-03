@@ -2,9 +2,9 @@ from proxy_provider import Proxy, ProxyProvider
 import random
 import requests
 class ListProxyProvider(ProxyProvider):
+    '''ProxyProvider created from multiline proxy list string'''
 
     def __init__(self, proxy_list_raw_str: str = '') -> None:
-        '''ListProxyProvider created from multiline proxy list string (ex. read from file)'''
         super().__init__()
         self.type = Proxy.LIST_PROXY_TYPE
         self.proxies = []
@@ -108,14 +108,6 @@ class ListProxyProvider(ProxyProvider):
     def __repr__(self) -> str:
         return f"ListProxyProvider (proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current: {self.proxy_str})"
 
-sample_proxy_list_str = '''
-#gjgjfgsjfh
-109.172.113.130:59101:staniaskz:WiRhdJv7ty
-93.188.207.49:59101:staniaskz:WiRhdJv7ty	
-212.8.229.77:59101:staniaskz:WiRhdJv7ty	
-77.83.118.44:59101:staniaskz:WiRhdJv7ty
-94.137.90.126:59101:staniaskz:WiRhdJv7ty
-'''
 socks5_proxy_list_str = '''
 #shdgfsjhgjfgdjh
 socks5:94.137.90.126:59101:staniaskz:WiRhdJv7ty	
@@ -123,11 +115,9 @@ socks5:109.172.113.130:59101:staniaskz:WiRhdJv7ty
 socks5:93.188.207.49:59101:staniaskz:WiRhdJv7ty	
 socks5:212.8.229.77:59101:staniaskz:WiRhdJv7ty	
 socks5:77.83.118.44:59101:staniaskz:WiRhdJv7ty	
-
 '''
 
 if __name__ == '__main__' :
-    socks5_proxy_list_str = open('util/proxy/proxy_list.txt').read()
     pp1 = ListProxyProvider(proxy_list_raw_str=socks5_proxy_list_str)
     print(pp1)
     for i in range(0, pp1.proxies_count):
