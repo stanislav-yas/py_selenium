@@ -5,6 +5,7 @@ import time
 from typing import Type
 from selenium import webdriver
 from util.parser import Parser
+from util.proxy.proxy_provider import ProxyProvider
 from .podcast_site import PodcastSite
 
 class PodcastParser(Parser):
@@ -13,6 +14,7 @@ class PodcastParser(Parser):
                  driver: webdriver.Chrome | webdriver.Firefox | None = None,
                  driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                  browser_headless = True,
+                 proxy_provider: ProxyProvider | None = None,
                  output_dir = os.path.curdir,
                  log_file = 'podcast_parser.log',
                  log_level = logging.INFO,
@@ -24,7 +26,8 @@ class PodcastParser(Parser):
                  ) -> None:
         super().__init__( driver = driver,
                          driver_type = driver_type,
-                         browser_headless = browser_headless, 
+                         browser_headless = browser_headless,
+                         proxy_provider = proxy_provider,
                          output_dir = output_dir,
                          log_file = log_file,
                          log_level = log_level

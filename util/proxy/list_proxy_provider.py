@@ -34,8 +34,8 @@ class ListProxyProvider(ProxyProvider):
         '''All proxies including blocked'''
         return self.proxies + self.blocked_proxies
     
-    def change_proxy(self, random_change = False) -> list | None:
-        '''Change proxy. If not 'random_change' then returns next available proxy'''
+    def rotate_proxy(self, random_change = False) -> list | None:
+        '''Rotate proxy. If not 'random_change' then returns next available proxy'''
         if(self.proxies_count == 0): return None
         prev_index = self.proxy_index
         if random_change and len(self.proxies) > 2:
@@ -53,7 +53,7 @@ class ListProxyProvider(ProxyProvider):
     def proxy(self) -> list | None:
         '''Current available proxy'''
         if  self.proxy_index < 0:
-            return self.change_proxy()
+            return self.rotate_proxy()
         else:
             return self.proxies[self.proxy_index]
         
@@ -124,6 +124,6 @@ if __name__ == '__main__' :
         if not pp1.check_proxy():
             pp1.block_proxy()
         else:
-            pp1.change_proxy()
+            pp1.rotate_proxy()
     print(pp1)
     pass

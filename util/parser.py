@@ -3,6 +3,7 @@ import os
 import logging
 from typing import Type
 from selenium import webdriver
+from util.proxy.proxy_provider import ProxyProvider
 
 class Parser:
 
@@ -10,6 +11,7 @@ class Parser:
                   driver: webdriver.Chrome | webdriver.Firefox | None = None,
                   driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                   browser_headless = True,
+                  proxy_provider: ProxyProvider | None = None,
                   output_dir = os.path.curdir, 
                   log_file = 'parser.log', 
                   log_level = logging.DEBUG, 
@@ -17,6 +19,7 @@ class Parser:
                 ) -> None:
         self._driver_type = driver_type
         self._browser_headless = browser_headless
+        self._pp = proxy_provider
         self._log_file = log_file
         self._log_level = log_level
         self._output_dir = output_dir

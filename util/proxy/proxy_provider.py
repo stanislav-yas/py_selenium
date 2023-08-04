@@ -6,3 +6,6 @@ class Proxy:
 class ProxyProvider:
     def __init__(self) -> None:
         type = Proxy.UNKNOWN_TYPE
+
+    def rotate_proxy(self, random_change = False) -> list | None:
+        raise NotImplemented

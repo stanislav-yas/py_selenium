@@ -2,7 +2,7 @@ from list_proxy_provider import ListProxyProvider
 
 class FileListProxyProvider(ListProxyProvider):
     '''ProxyProvider created from proxy list file'''
-    
+
     def __init__(self, list_proxy_file_path) -> None:
         self._list_proxy_file_path = list_proxy_file_path
         with open(list_proxy_file_path) as f:
@@ -16,6 +16,6 @@ if __name__ == '__main__' :
         if not pp1.check_proxy():
             pp1.block_proxy()
         else:
-            pp1.change_proxy()
+            pp1.rotate_proxy()
     print(pp1)
     pass
