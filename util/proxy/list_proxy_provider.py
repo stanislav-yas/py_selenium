@@ -2,18 +2,28 @@ from proxy_provider import Proxy, ProxyProvider
 import random
 import requests
 class ListProxyProvider(ProxyProvider):
-    '''ProxyProvider created from multiline proxy list string'''
+    """ProxyProvider with proxies loaded from:
+        - proxy list strings
+        - proxy list file
+    """
 
-    def __init__(self, proxy_list_raw_str: str = '') -> None:
+    def __init__(self, proxy_list_strings: str = '', proxy_list_file = None) -> None:
         super().__init__()
         self.type = Proxy.LIST_PROXY_TYPE
         self.proxies = []
-        '''Array of available proxies. Proxy is an array of [protocol, ip, port, login. password]'''        
+        """Array of available proxies. Proxy is an array of [protocol, ip, port, login. password]"""
+
         self.blocked_proxies = []
-        '''Array of blocked (unavailable) proxies'''
+        """Array of blocked (unavailable) proxies"""
+
         self.proxy_index = -1
-        '''Index of current proxy. -1 if not set yet '''        
-        proxy_list = proxy_list_raw_str.splitlines()
+        """Index of current proxy. -1 if not set yet"""
+
+        if proxy_list_file != None:
+            with open(proxy_list_file) as f:
+                proxy_list_strings = f.read()
+        proxy_list = proxy_list_strings.splitlines()
+
         for proxy in proxy_list:
             try:
                 cnt = proxy.count(':')
@@ -22,11 +32,11 @@ class ListProxyProvider(ProxyProvider):
             except:
                 continue          
         if len(self.proxies) == 0:
-            raise Exception('Proxies absent')    
+            raise Exception('ListProxyProvider creation failed - proxies absent')    
 
     @property
     def proxies_count(self):
-        '''Count of the available proxies'''
+        """Count of the available proxies"""
         return len(self.proxies)
     
     @property
@@ -35,7 +45,7 @@ class ListProxyProvider(ProxyProvider):
         return self.proxies + self.blocked_proxies
     
     def rotate_proxy(self, random_change = False) -> list | None:
-        '''Rotate proxy. If not 'random_change' then returns next available proxy'''
+        """Rotate proxy. If not 'random_change', then returns next available proxy"""
         if(self.proxies_count == 0): return None
         prev_index = self.proxy_index
         if random_change and len(self.proxies) > 2:
@@ -51,14 +61,14 @@ class ListProxyProvider(ProxyProvider):
     
     @property
     def proxy(self) -> list | None:
-        '''Current available proxy'''
+        """Current available proxy"""
         if  self.proxy_index < 0:
             return self.rotate_proxy()
         else:
             return self.proxies[self.proxy_index]
         
     def block_proxy(self):
-        '''Block current proxy (move to blocked proxy list)'''
+        """Block current proxy (move to blocked proxy list)"""
         self.blocked_proxies.append(self.proxy)
         self.proxies.remove(self.proxy)
         if len(self.proxies) == 0:
@@ -68,7 +78,7 @@ class ListProxyProvider(ProxyProvider):
 
         
     def check_proxy(self, timeout=10) -> bool:
-        '''Checking availability of current proxy at 'https://httpbin.org/ip' '''
+        """Checking availability of current proxy at https://httpbin.org/ip """
         proxy = self.proxy
         if proxy == None: return False
         if len(proxy) >= 5:
@@ -102,7 +112,7 @@ class ListProxyProvider(ProxyProvider):
     
     @property
     def proxy_str(self):
-        '''String representation of proxy w/o login,pwd'''
+        """String representation of proxy, w/o login,pwd"""
         return f'{self.proxy[0]}//{self.proxy[1]}:{self.proxy[2]}' if self.proxy != None else None
     
     def __repr__(self) -> str:
@@ -118,7 +128,8 @@ socks5:77.83.118.44:59101:staniaskz:WiRhdJv7ty
 '''
 
 if __name__ == '__main__' :
-    pp1 = ListProxyProvider(proxy_list_raw_str=socks5_proxy_list_str)
+    # pp1 = ListProxyProvider(proxy_list_strings=socks5_proxy_list_str)
+    pp1 = ListProxyProvider(proxy_list_file='util/proxy/proxy_list.txt')
     print(pp1)
     for i in range(0, pp1.proxies_count):
         if not pp1.check_proxy():
