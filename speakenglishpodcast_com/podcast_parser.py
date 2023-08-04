@@ -5,8 +5,8 @@ import time
 from typing import Type
 from selenium import webdriver
 from util.parser import Parser
-from util.proxy.proxy_provider import ProxyProvider
 from .podcast_site import PodcastSite
+from util.proxy.proxy_provider import ProxyProvider
 
 class PodcastParser(Parser):
 

@@ -18,6 +18,6 @@ parser = PodcastParser(
             exit_if_not_found=False,
             clear_dir=True,
             episode_first=199,
-            episode_last=201,
+            episode_last=200,
             )
 parser.start()

@@ -55,7 +55,12 @@ class Parser:
                 options.add_argument('-headless')
             self.driver=webdriver.Firefox(options=options)
         else:
-            raise Exception(f'Unsupported driver type: {self._driver_type}') 
+            raise Exception(f'Unsupported driver type: {self._driver_type}')
+        
+    def rotate_driver(self):
+        if self.driver != None:
+           self.driver.quit()
+        self.init_driver()
     
     def run(self) -> None:
         '''The main parsing flow - should be implemented in derived class - '''

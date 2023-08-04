@@ -5,10 +5,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import WebDriverException
 from .episode import Episode, episode_num_to_str
 from util.parser import Parser
-from podcast_parser import PodcastParser
 
 class PodcastSite:
-    def __init__(self, parser: PodcastParser) -> None:
+    def __init__(self, parser: Parser) -> None:
         self.parser = parser
         # self.wait = WebDriverWait(parser.driver, 10)
 
