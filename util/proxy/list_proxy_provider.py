@@ -3,11 +3,11 @@ import random
 import requests
 class ListProxyProvider(ProxyProvider):
     """ProxyProvider with proxies loaded from:
-        - proxy list strings
         - proxy list file
+        - proxy list strings
     """
 
-    def __init__(self, proxy_list_strings: str = '', proxy_list_file = None) -> None:
+    def __init__(self, proxy_list_file = None, proxy_list_strings: str = '') -> None:
         super().__init__()
         self.type = Proxy.LIST_PROXY_TYPE
         self.proxies = []
