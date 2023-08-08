@@ -19,7 +19,7 @@ class ListProxyProvider(ProxyProvider):
         self.proxy_index = -1
         """Index of current proxy. -1 if not set yet"""
 
-        if proxy_list_file != None:
+        if proxy_list_file is not None:
             with open(proxy_list_file) as f:
                 proxy_list_strings = f.read()
         proxy_list = proxy_list_strings.splitlines()
@@ -80,7 +80,7 @@ class ListProxyProvider(ProxyProvider):
     def check_proxy(self, timeout=10) -> bool:
         """Checking availability of current proxy at https://httpbin.org/ip """
         proxy = self.proxy
-        if proxy == None: return False
+        if proxy is None: return False
         if len(proxy) >= 5:
             proxy_url = f'{proxy[3]}:{proxy[4]}@{proxy[1]}:{proxy[2]}'
         elif len(proxy) >= 3:
@@ -113,7 +113,7 @@ class ListProxyProvider(ProxyProvider):
     @property
     def proxy_str(self):
         """String representation of proxy, w/o login,pwd"""
-        return f'{self.proxy[0]}//{self.proxy[1]}:{self.proxy[2]}' if self.proxy != None else None
+        return f'{self.proxy[0]}//{self.proxy[1]}:{self.proxy[2]}' if self.proxy is not None else None
     
     def __repr__(self) -> str:
         return f"ListProxyProvider (proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current: {self.proxy_str})"

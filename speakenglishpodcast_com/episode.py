@@ -22,13 +22,13 @@ class Episode:
     def download_mp3(self, dir_name: str):
         file_name = f'episode#{self.number_str}.mp3'
         mp3_file_path = os.path.join(dir_name, file_name)
-        if self.mp3_href != None:
+        if self.mp3_href is not None:
             return request.urlretrieve(self.mp3_href, mp3_file_path)
 
     def download_pdf(self, dir_name: str):
         file_name = f'episode#{self.number_str}.pdf'
         pdf_file_path = os.path.join(dir_name, file_name)
-        if self.pdf_href != None:
+        if self.pdf_href is not None:
             return request.urlretrieve(self.pdf_href, pdf_file_path)
 
 def episode_num_to_str(num: int) -> str:

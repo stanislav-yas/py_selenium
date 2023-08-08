@@ -60,11 +60,11 @@ class PodcastParser(Parser):
         # driver.set_window_rect(x=1920, y=0, width=1900, height=1000)
         site = PodcastSite(self)
         episode_number = self._episode_first
-        while self._episode_last == None or (self._episode_last != None and episode_number <= self._episode_last):
+        while self._episode_last is None or (self._episode_last is not None and episode_number <= self._episode_last):
             episode = site.search_episode(episode_number)
-            if episode == None:
+            if episode is None:
                 st = f'Episode #{episode_number} not found'
-                if  self._exit_if_not_found or self._episode_last == None:
+                if  self._exit_if_not_found or self._episode_last is None:
                     logging.warning(f"{st} - exiting...")
                     break
                 logging.warning(st)

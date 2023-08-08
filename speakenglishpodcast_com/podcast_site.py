@@ -23,7 +23,7 @@ class PodcastSite:
             a = driver.find_elements(by=By.CSS_SELECTOR, value='article .entry-title > a')
             if len(a) > 0:
                 href = a[0].get_attribute('href')
-                if href != None:
+                if href is not None:
                     return Episode(self.parser, num, href)
             else:
                 driver.get_screenshot_as_file(os.path.join(self.parser._output_dir,f"shot_not_found_#{num_str}.png"))

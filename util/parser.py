@@ -38,7 +38,7 @@ class Parser:
            level=log_level,
            handlers=[fh, ch]
         )
-        if driver == None:
+        if driver is None:
            self.init_driver()
         else:
            self.driver = driver
@@ -58,7 +58,7 @@ class Parser:
             raise Exception(f'Unsupported driver type: {self._driver_type}')
         
     def rotate_driver(self):
-        if self.driver != None:
+        if self.driver is not None:
            self.driver.quit()
         self.init_driver()
     
@@ -75,15 +75,15 @@ class Parser:
           logging.info(f'Parser finished. Elapsed time = {self.finished - self.started}')            
         except Exception as err:
           logging.error(f'Error occured in parser.run(): {err}')
-          if self._screenshot_on_error and self.driver != None:
+          if self._screenshot_on_error and self.driver is not None:
             self.driver.get_screenshot_as_file(os.path.join(self._output_dir,"screenshot_error.png"))
         try:
           self.finalize()
         except Exception as err:
           logging.error(f'Error occured in parser.finalize(): {err}')
-          if self._screenshot_on_error and self.driver != None:
+          if self._screenshot_on_error and self.driver is not None:
             self.driver.get_screenshot_as_file(os.path.join(self._output_dir,"screenshot_error.png"))
 
     def finalize(self) -> None:
-        if self.driver != None:
+        if self.driver is not None:
           self.driver.quit()
