@@ -11,6 +11,15 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "justMyCode": false
+    },
+    {
+      "name": "Python: pproxy --test",
+      "type": "python",
+      "request": "launch",
+      "module": "pproxy",
+      "args": ["-l", "socks5://:8888", "-r", "socks5://212.8.229.77:59101#staniaskz:WiRhdJv7ty"], //, "--test", "https://api.myip.com"
+      "console": "integratedTerminal",
+      "justMyCode": false      
     }
   ]
 }
