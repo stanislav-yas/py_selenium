@@ -1,9 +1,11 @@
 import asyncio
-import pproxy
+import sys
 import time
+import pproxy
+from proxy import Proxy
 
 async def run_proxy():
-    # pproxy -l http://:8888 -r socks5://93.188.207.49:59101#staniaskz:WiRhdJv7ty
+    # pproxy -l socks5://:8888 -r socks5://93.188.207.49:59101#staniaskz:WiRhdJv7ty
     server = pproxy.Server('socks5://:8888')
     remote = pproxy.Connection('socks5://93.188.207.49:59101#staniaskz:WiRhdJv7ty')
     args = dict( rserver = [remote],
@@ -26,23 +28,20 @@ async def run_proxy():
         loop.close()
         print("Loop closed")
 
-async def mytask():
-    print("mytask will be running 15 sec.")
-    result = await asyncio.sleep(15, result=555)
-    return result
+async def start_proxy():
+    args = "-m ppproxy -l socks5://:8888 -r socks5://212.8.229.77:59101#staniaskz:WiRhdJv7ty".split()
+    # sys.executable, '-m pproxy'
+    proc = await asyncio.create_subprocess_exec(sys.executable, *args)
+    # await proc.wait()
+    return proc
 
-async def main():
-    # Create a "cancel_me" Task
-    task = asyncio.create_task(mytask(), name='mytask')
-
-    # Wait for 5 second
-    await asyncio.sleep(5)
-
-    # task.cancel()
-    try:
-        await task
-        print(f"mytask finished successfully with result={task.result()}")
-    except asyncio.CancelledError:
-        print(f"main(): mytask is cancelled now with result=")
-
-asyncio.run(main())
+proxy = Proxy('socks5', '212.8.229.77', '59101', 'staniaskz', 'WiRhdJv7ty')
+if not proxy.started:
+    proxy.start()
+time.sleep(5)
+# proxy.stop()
+# proc = asyncio.run(start_proxy())
+# print(proc.pid)
+# proc.terminate()
+proxy = None
+pass

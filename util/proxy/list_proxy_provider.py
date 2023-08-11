@@ -1,4 +1,5 @@
-from proxy_provider import Proxy, ProxyProvider
+from proxy_provider import ProxyProvider
+from proxy import Proxy
 import random
 import requests
 class ListProxyProvider(ProxyProvider):
@@ -9,7 +10,6 @@ class ListProxyProvider(ProxyProvider):
 
     def __init__(self, proxy_list_file = None, proxy_list_strings: str = '') -> None:
         super().__init__()
-        self.type = Proxy.LIST_PROXY_TYPE
         self.proxies = []
         """Array of available proxies. Proxy is an array of [protocol, ip, port, login. password]"""
 
