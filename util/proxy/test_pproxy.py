@@ -13,7 +13,7 @@ async def run_proxy():
                 )
     print('Serving on', server.bind, 'by', ",".join(i.name for i in server.protos) + ('(SSL)' if server.sslclient else ''), '({}{})'.format(server.cipher.name, ' '+','.join(i.name() for i in server.cipher.plugins) if server.cipher and server.cipher.plugins else '') if server.cipher else '')
     loop = asyncio.get_event_loop()
-    handler = await server.start_server(args)
+    handler = loop.run_until_complete(server.start_server(args))
     try:
         print("Loop started")
         loop.run_forever()
@@ -23,7 +23,7 @@ async def run_proxy():
     finally:
         print("Loop closing...")
         handler.close()
-        await handler.wait_closed()
+        loop.run_until_complete(handler.wait_closed())
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
         print("Loop closed")
