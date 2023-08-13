@@ -6,14 +6,15 @@ class ListProxyProvider(ProxyProvider):
     """ProxyProvider with proxies loaded from:
         - proxy list file
         - proxy list strings
+        with line format as 'schema:ip:port:login:password'
     """
 
     def __init__(self, proxy_list_file = None, proxy_list_strings: str = '') -> None:
         super().__init__()
-        self.proxies = []
-        """Array of available proxies. Proxy is an array of [protocol, ip, port, login. password]"""
+        self.proxies:list[Pproxy] = []
+        """Array of available proxies"""
 
-        self.blocked_proxies = []
+        self.blocked_proxies:list[Pproxy] = []
         """Array of blocked (unavailable) proxies"""
 
         self.proxy_index = -1
@@ -24,11 +25,12 @@ class ListProxyProvider(ProxyProvider):
                 proxy_list_strings = f.read()
         proxy_list = proxy_list_strings.splitlines()
 
-        for proxy in proxy_list:
+        for string in proxy_list:
             try:
-                cnt = proxy.count(':')
+                cnt = string.count(':')
                 if cnt == 2 or cnt == 4:
-                    self.proxies.append(proxy.strip().split(':'))            
+                    args = string.strip().split(':')
+                    self.proxies.append(Pproxy(*args))            
             except:
                 continue          
         if len(self.proxies) == 0:
@@ -44,7 +46,7 @@ class ListProxyProvider(ProxyProvider):
         '''All proxies including blocked'''
         return self.proxies + self.blocked_proxies
     
-    def rotate_proxy(self, random_change = False) -> list | None:
+    def rotate_proxy(self, random_change = False) -> Pproxy | None:
         """Rotate proxy. If not 'random_change', then returns next available proxy"""
         if(self.proxies_count == 0): return None
         prev_index = self.proxy_index
@@ -60,63 +62,68 @@ class ListProxyProvider(ProxyProvider):
         return self.proxies[self.proxy_index]
     
     @property
-    def proxy(self) -> list | None:
+    def proxy(self) -> Pproxy | None:
         """Current available proxy"""
         if  self.proxy_index < 0:
             return self.rotate_proxy()
         else:
             return self.proxies[self.proxy_index]
         
-    def block_proxy(self):
-        """Block current proxy (move to blocked proxy list)"""
-        self.blocked_proxies.append(self.proxy)
-        self.proxies.remove(self.proxy)
+    def block_proxy(self, do_stop=True):
+        """Block current proxy (move to blocked proxy list)
+            - 'do_stop' - stop current proxy if True
+        """
+        proxy = self.proxy
+        if proxy is None: return
+        if do_stop:
+            proxy.stop()
+        self.blocked_proxies.append(proxy)
+        self.proxies.remove(proxy)
         if len(self.proxies) == 0:
             self.proxy_index = -1        
         elif self.proxy_index >= len(self.proxies):
             self.proxy_index = 0
 
         
-    def check_proxy(self, timeout=10) -> bool:
+    def check_proxy(self, check_type=0, timeout=10) -> bool:
         """Checking availability of current proxy at https://httpbin.org/ip """
         proxy = self.proxy
         if proxy is None: return False
-        if len(proxy) >= 5:
-            proxy_url = f'{proxy[3]}:{proxy[4]}@{proxy[1]}:{proxy[2]}'
-        elif len(proxy) >= 3:
-            proxy_url = f'{proxy[1]}:{proxy[2]}'
-        else: return False
         proxies = {
             # 'http': f'http://{proxy_url}',
             # 'https': f'https://{proxy_url}',
             # 'http': f'socks5://{proxy_url}',
             # 'https': f'socks5://{proxy_url}',
-            'all': f'{proxy[0]}://{proxy_url}',          
+            'all': f'{proxy.scheme}://localhost:{proxy.lport}',          
         }
         try:
-            print(f'Checking proxy: {self.proxy_str}...')
-            response = requests.get('https://httpbin.org/ip', proxies=proxies, verify=True, timeout=timeout)
+            proxy.start()
+            print(f'Checking proxy: {proxy}...')
+            
+            if check_type == 0:
+                check_site_url = 'https://api.myip.com/'
+            else:
+                check_site_url = 'https://httpbin.org/ip'
+            response = requests.get(check_site_url, proxies=proxies, verify=True, timeout=timeout)
             print(f'Checking elapsed {response.elapsed.seconds} seconds, status_code = {response.status_code}')
             if response.status_code == requests.codes.ok:
-                origin = response.json()['origin']
-                if origin == proxy[1]:
-                    print(f'Checking success, origin: {origin}')
+                if check_type == 0:
+                    origin = response.json()['ip']
+                else:
+                    origin = response.json()['origin']
+                if origin == proxy.host:
+                    print(f'Checking success, proxy: {proxy.host}, origin: {origin}')
                     return True
                 else:
-                    print(f'Checking failed, origin: {origin}')
+                    print(f'Checking failed, proxy: {proxy.host}, origin: {origin}')
                     return False
         except Exception as err:
             print(err)
         print('Checking failed')
         return False
     
-    @property
-    def proxy_str(self):
-        """String representation of proxy, w/o login,pwd"""
-        return f'{self.proxy[0]}//{self.proxy[1]}:{self.proxy[2]}' if self.proxy is not None else None
-    
     def __repr__(self) -> str:
-        return f"ListProxyProvider (proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current: {self.proxy_str})"
+        return f"ListProxyProvider (proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current: {self.proxy})"
 
 socks5_proxy_list_str = '''
 #shdgfsjhgjfgdjh
