@@ -1,5 +1,5 @@
 from proxy_provider import ProxyProvider
-from proxy import Proxy
+from p_proxy import Pproxy
 import random
 import requests
 class ListProxyProvider(ProxyProvider):
