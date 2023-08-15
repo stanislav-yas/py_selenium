@@ -4,10 +4,11 @@ import sys
 class Pproxy:
     LOCAL_PORT_NUM = 8880
 
-    def __init__(self, scheme, host, port, user=None, pwd=None) -> None:
+    def __init__(self, scheme, host, port, user=None, pwd=None, lport=str(LOCAL_PORT_NUM)) -> None:
         self.scheme = scheme
-        self.lport = Pproxy.LOCAL_PORT_NUM
-        Pproxy.LOCAL_PORT_NUM += 1 # TODO port number limitation        
+        self.lport = lport
+        if lport == Pproxy.LOCAL_PORT_NUM:
+            Pproxy.LOCAL_PORT_NUM += 1 # TODO port number limitation        
         self.host = host
         self.port = port
         self._user = user
