@@ -20,6 +20,7 @@ class ListProxyProvider(ProxyProvider):
         self.proxy_index = -1
         """Index of current proxy. -1 if not set yet"""
 
+        self.LOCAL_PORT_NUM = '8880'
         if proxy_list_file is not None:
             with open(proxy_list_file) as f:
                 proxy_list_strings = f.read()
@@ -29,7 +30,8 @@ class ListProxyProvider(ProxyProvider):
             try:
                 cnt = string.count(':')
                 if cnt == 2 or cnt == 4:
-                    args = string.strip().split(':')
+                    args = [self.LOCAL_PORT_NUM]
+                    args += string.strip().split(':')
                     self.proxies.append(Pproxy(*args))            
             except:
                 continue          
@@ -48,7 +50,9 @@ class ListProxyProvider(ProxyProvider):
     
     def rotate_proxy(self, random_change = False) -> Pproxy | None:
         """Rotate proxy. If not 'random_change', then returns next available proxy"""
-        if(self.proxies_count == 0): return None
+        if self.proxies_count == 0: return None
+        if self.proxy_index >= 0 and self.proxy is not None:
+            self.proxy.stop()
         prev_index = self.proxy_index
         if random_change and len(self.proxies) > 2:
             index = prev_index
@@ -58,8 +62,11 @@ class ListProxyProvider(ProxyProvider):
         else:
             self.proxy_index += 1
             if self.proxy_index >= len(self.proxies):
-                self.proxy_index = 0            
-        return self.proxies[self.proxy_index]
+                self.proxy_index = 0
+        proxy = self.proxies[self.proxy_index]
+        if proxy is not None:
+            proxy.start()
+        return proxy
     
     @property
     def proxy(self) -> Pproxy | None:

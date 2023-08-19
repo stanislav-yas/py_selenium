@@ -2,13 +2,13 @@ import asyncio
 import sys
 
 class Pproxy:
-    LOCAL_PORT_NUM = 8880
+    # LOCAL_PORT_NUM = 8880
 
-    def __init__(self, scheme, host, port, user=None, pwd=None, lport=str(LOCAL_PORT_NUM)) -> None:
+    def __init__(self, lport, scheme, host, port, user=None, pwd=None) -> None:
+        self.lport = lport        
         self.scheme = scheme
-        self.lport = lport
-        if lport == Pproxy.LOCAL_PORT_NUM:
-            Pproxy.LOCAL_PORT_NUM += 1 # TODO port number limitation        
+        # if lport == Pproxy.LOCAL_PORT_NUM:
+        #     Pproxy.LOCAL_PORT_NUM += 1 # TODO port number limitation        
         self.host = host
         self.port = port
         self._user = user
