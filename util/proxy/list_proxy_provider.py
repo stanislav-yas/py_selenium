@@ -2,6 +2,7 @@ from proxy_provider import ProxyProvider
 from p_proxy import Pproxy
 import random
 import requests
+import time
 class ListProxyProvider(ProxyProvider):
     """ProxyProvider with proxies loaded from:
         - proxy list file
@@ -48,11 +49,16 @@ class ListProxyProvider(ProxyProvider):
         '''All proxies including blocked'''
         return self.proxies + self.blocked_proxies
     
-    def rotate_proxy(self, random_change = False) -> Pproxy | None:
-        """Rotate proxy. If not 'random_change', then returns next available proxy"""
+    def rotate_proxy(self, random_change=False, delay=1) -> Pproxy | None:
+        """Rotate proxy. 
+            - If not 'random_change', then returns next available proxy
+            - delay in seconds (float)
+        """
         if self.proxies_count == 0: return None
         if self.proxy_index >= 0 and self.proxy is not None:
             self.proxy.stop()
+            if delay > 0:
+                time.sleep(delay/2)
         prev_index = self.proxy_index
         if random_change and len(self.proxies) > 2:
             index = prev_index
@@ -66,6 +72,8 @@ class ListProxyProvider(ProxyProvider):
         proxy = self.proxies[self.proxy_index]
         if proxy is not None:
             proxy.start()
+            if delay > 0:
+                time.sleep(delay/2)
         return proxy
     
     @property
