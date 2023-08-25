@@ -1,0 +1,6 @@
+# rus Socks5 proxies from Proxy-sale
+socks5:109.172.113.130:59101:staniaskz:WiRhdJv7ty	
+socks5:185.231.246.65:59101:staniaskz:WiRhdJv7ty	
+socks5:212.8.229.77:59101:staniaskz:WiRhdJv7ty	
+socks5:109.172.114.160:59101:staniaskz:WiRhdJv7ty
+socks5:94.137.90.126:59101:staniaskz:WiRhdJv7ty
