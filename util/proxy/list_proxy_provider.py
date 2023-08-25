@@ -127,32 +127,32 @@ class ListProxyProvider(ProxyProvider):
                 else:
                     origin = response.json()['origin']
                 if origin == proxy.host:
-                    print(f'Checking success, proxy: {proxy.host}, origin: {origin}')
+                    print(f'Checking success, proxy: {proxy.host}, origin: {origin}\n')
                     return True
                 else:
-                    print(f'Checking failed, proxy: {proxy.host}, origin: {origin}')
+                    print(f'Checking failed, proxy: {proxy.host}, origin: {origin}\n')
                     return False
         except Exception as err:
             print(err)
-        print('Checking failed')
+        print('Checking failed\n')
         return False
     
     def __repr__(self) -> str:
-        return f"ListProxyProvider (proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current: {self.proxy})"
+        return f"ListProxyProvider [proxies: {len(self.proxies)+len(self.blocked_proxies)}, blocked: {len(self.blocked_proxies)}, current_index: {self.proxy_index}]"
 
 socks5_proxy_list_str = '''
 #shdgfsjhgjfgdjh
-socks5:94.137.90.126:59101:staniaskz:WiRhdJv7ty	
 socks5:109.172.113.130:59101:staniaskz:WiRhdJv7ty	
-socks5:93.188.207.49:59101:staniaskz:WiRhdJv7ty	
+socks5:185.231.246.65:59101:staniaskz:WiRhdJv7ty	
 socks5:212.8.229.77:59101:staniaskz:WiRhdJv7ty	
-socks5:77.83.118.44:59101:staniaskz:WiRhdJv7ty	
+socks5:109.172.114.160:59101:staniaskz:WiRhdJv7ty
+socks5:94.137.90.126:59101:staniaskz:WiRhdJv7ty	
 '''
 
 if __name__ == '__main__' :
     # pp1 = ListProxyProvider(proxy_list_strings=socks5_proxy_list_str)
-    pp1 = ListProxyProvider(proxy_list_file='util/proxy/proxy_list.txt')
-    print(pp1)
+    pp1 = ListProxyProvider(proxy_list_file='util/proxy/ru_proxy_list.txt')
+    # print(pp1)
     for i in range(0, pp1.proxies_count):
         if not pp1.check_proxy():
             pp1.block_proxy()
