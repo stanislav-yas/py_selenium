@@ -6,7 +6,7 @@ from typing import Type
 from selenium import webdriver
 from util.parser import Parser
 from .podcast_site import PodcastSite
-from util.proxy.proxy_provider import ProxyProvider
+from util.proxy.list_proxy_provider import ListProxyProvider
 
 class PodcastParser(Parser):
 
@@ -14,7 +14,7 @@ class PodcastParser(Parser):
                  driver: webdriver.Chrome | webdriver.Firefox | None = None,
                  driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                  browser_headless = True,
-                 proxy_provider: ProxyProvider | None = None,
+                 proxy_provider: ListProxyProvider | None = None,
                  output_dir = os.path.curdir,
                  log_file = 'podcast_parser.log',
                  log_level = logging.INFO,

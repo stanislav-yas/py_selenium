@@ -3,7 +3,8 @@ import os
 import logging
 from typing import Type
 from selenium import webdriver
-from util.proxy.proxy_provider import ProxyProvider
+from selenium.webdriver.common.by import By
+from util.proxy.list_proxy_provider import ListProxyProvider
 
 class Parser:
 
@@ -11,7 +12,7 @@ class Parser:
                   driver: webdriver.Chrome | webdriver.Firefox | None = None,
                   driver_type: Type[webdriver.Chrome] | Type[webdriver.Firefox] = webdriver.Chrome,
                   browser_headless = True,
-                  proxy_provider: ProxyProvider | None = None,
+                  proxy_provider: ListProxyProvider | None = None,
                   output_dir = os.path.curdir, 
                   log_file = 'parser.log', 
                   log_level = logging.DEBUG, 
@@ -48,6 +49,10 @@ class Parser:
             options = webdriver.ChromeOptions()
             if self._browser_headless == True:
                 options.add_argument('--headless')
+            if self._pp is not None:
+               proxy = self._pp.proxy
+               if proxy is not None:
+                options.add_argument(f"--proxy-server=127.0.0.1:{proxy.lport}")
             self.driver=webdriver.Chrome(options=options)
         elif issubclass(self._driver_type, webdriver.Firefox):
             options = webdriver.FirefoxOptions()
@@ -57,9 +62,15 @@ class Parser:
         else:
             raise Exception(f'Unsupported driver type: {self._driver_type}')
         
-    def rotate_driver(self):
+    def rotate_driver(self, random_change: bool = False, delay: int = 0):
+        """Rotate driver. 
+            - If not 'random_change', then switches to the next available proxy, 
+            - delay in seconds (float)
+        """        
         if self.driver is not None:
            self.driver.quit()
+        if self._pp is not None:
+           self._pp.rotate_proxy(random_change=random_change, delay=delay)
         self.init_driver()
     
     def run(self) -> None:
@@ -87,3 +98,13 @@ class Parser:
     def finalize(self) -> None:
         if self.driver is not None:
           self.driver.quit()
+
+if __name__ == '__main__' :
+    pp1 = ListProxyProvider(proxy_list_file='util/proxy/ru_proxy_list.txt')
+    parser = Parser(browser_headless=False, proxy_provider=pp1)
+    driver = parser.driver
+    driver.get('https://api.myip.com/')
+    body = driver.find_element(by=By.TAG_NAME, value='body')
+    parser.rotate_driver(delay=1)
+    driver.get('https://api.myip.com/')
+    body = driver.find_element(by=By.TAG_NAME, value='body')

@@ -1,5 +1,5 @@
-from proxy_provider import ProxyProvider
-from p_proxy import Pproxy
+from .proxy_provider import ProxyProvider
+from .p_proxy import Pproxy
 import random
 import requests
 import time
