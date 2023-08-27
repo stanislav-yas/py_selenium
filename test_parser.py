@@ -3,7 +3,7 @@ import chromedriver_autoinstaller
 from util.parser import Parser
 from util.proxy.list_proxy_provider import ListProxyProvider
 
-
+chromedriver_autoinstaller.install()
 pp1 = ListProxyProvider(proxy_list_file='util/proxy/ru_proxy_list.txt')
 parser = Parser(browser_headless=False, proxy_provider=pp1)
 driver = parser.driver
